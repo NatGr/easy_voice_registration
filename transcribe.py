@@ -11,7 +11,6 @@ from random import shuffle
 
 
 VAD_FRAME_DURATION_MS = 30
-VAD_AGGRESSIVENESS = 3
 
 
 def in_red(arg: str) -> str:
@@ -68,6 +67,8 @@ if __name__ == '__main__':
     parser.add_argument("--frames_per_buffer", help="number of frames per buffer in the audio recording", type=int,
                         default=1024)
     parser.add_argument("--no_vad", help="deactivate trimming silence within audio", action='store_true')
+    parser.add_argument("--vad_aggressiveness", choices=(1, 2, 3), default=2,
+                        help="aggressiveness of the voice detection, the higher the more likely we are to trim speech")
     parser.add_argument("--random_order", action='store_true',
                         help="will ask you to pronounce the sentence in random order to be a bit less monotone")
     args = parser.parse_args()
@@ -122,7 +123,7 @@ if __name__ == '__main__':
 
             # trims the audio
             if not args.no_vad and args.n_channels == 1 and args.rate in (8000, 16000, 32000, 48000):
-                audio = vad_filter(args.rate, vad=webrtcvad.Vad(VAD_AGGRESSIVENESS),
+                audio = vad_filter(args.rate, vad=webrtcvad.Vad(args.vad_aggressiveness),
                                    frames=reframe_audio(VAD_FRAME_DURATION_MS, audio, args.rate))
 
             # writes wav

@@ -10,8 +10,8 @@ The script will ask the user to pronounce the sentence and save the result in th
 If some of the files in the csv already exists in audio_folder, nothing is done. This allows to quit the program and resume where we were.  
 Before writing a wav file, webrtcvad (a voice activity detector) is used to skip the silence at the start and end of the recording.  
 
-The rate, n_channels, frames per buffer, whether to use vad or not and whether to randomly shuffle the order in which 
-sentences must be pronounced can be specified as additional arguments.
+The rate, n_channels, frames per buffer, whether to use (which strength of) vad or not and whether to randomly shuffle 
+the order in which sentences must be pronounced can be specified as additional arguments.
 
 ## Installation
 Requires Python 3.6+, additionally you will have to install portaudio, pyaduio (it's python bindings) and webrtcvad.  
