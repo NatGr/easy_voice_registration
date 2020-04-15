@@ -7,6 +7,7 @@ import time
 import wave
 import webrtcvad
 from typing import List
+from random import shuffle
 
 
 VAD_FRAME_DURATION_MS = 30
@@ -67,6 +68,8 @@ if __name__ == '__main__':
     parser.add_argument("--frames_per_buffer", help="number of frames per buffer in the audio recording", type=int,
                         default=1024)
     parser.add_argument("--no_vad", help="deactivate trimming silence within audio", action='store_true')
+    parser.add_argument("--random_order", action='store_true',
+                        help="will ask you to pronounce the sentence in random order to be a bit less monotone")
     args = parser.parse_args()
 
     # reads csv
@@ -79,6 +82,9 @@ if __name__ == '__main__':
             sys.exit(-1)
 
         data = [(f"{row[0]}.wav", row[1]) for row in csv_reader]
+
+    if args.random_order:
+        shuffle(data)
 
     # finds already created files
     if os.path.exists(args.audio_folder):
