@@ -71,15 +71,17 @@ if __name__ == '__main__':
                         help="aggressiveness of the voice detection, the higher the more likely we are to trim speech")
     parser.add_argument("--random_order", action='store_true',
                         help="will ask you to pronounce the sentence in random order to be a bit less monotone")
+    parser.add_argument("--csv_delimiter", default=',',
+                        help="delimiter that is used in the csv file")
     args = parser.parse_args()
 
     # reads csv
     with open(args.csv) as file:
-        csv_reader = csv.reader(file, delimiter=',')
+        csv_reader = csv.reader(file, delimiter=args.csv_delimiter)
         row = next(csv_reader)
 
         if len(row) != 2 or row[0] != "file" or row[1] != "sentence":
-            sys.stderr.write("csv header should be 'file,sentence', see example.csv\n")
+            sys.stderr.write(f"csv header should be 'file{args.csv_delimiter}sentence', see example.csv\n")
             sys.exit(-1)
 
         data = [(f"{row[0]}.wav", row[1]) for row in csv_reader]
@@ -97,13 +99,11 @@ if __name__ == '__main__':
     pyaudio_audio = pyaudio.PyAudio()
     stream = pyaudio_audio.open(format=pyaudio.paInt16, channels=args.n_channels, rate=args.rate, input=True,
         frames_per_buffer=args.frames_per_buffer, stream_callback=process_audio)
+    stream.stop_stream()  # otherwise blank is recorded for a few seconds
 
     # queries user for each row
     for file, sentence in data:
-        if file in already_created:
-            print(f"sentence {in_red(sentence)} was already spoken")
-        else:
-
+        if file not in already_created:
             frames = []
             print(f"Sentence to pronounce: {in_red(sentence)}")
             try:
@@ -133,4 +133,4 @@ if __name__ == '__main__':
             waveFile.setframerate(args.rate)
             waveFile.writeframes(audio)
             waveFile.close()
-        print("------")
+            print("------")
