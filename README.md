@@ -11,7 +11,14 @@ If some of the files in the csv already exists in audio_folder, nothing is done.
 Before writing a wav file, webrtcvad (a voice activity detector) is used to skip the silence at the start and end of the recording.  
 
 The rate, n_channels, frames per buffer, whether to use (which strength of) vad or not and whether to randomly shuffle 
-the order in which sentences must be pronounced can be specified as additional arguments.
+the order in which sentences must be pronounced can be specified as additional arguments.  
+
+In case you commit an error while registering audio, you should:
+  - end the registration
+  - search for the most recently created audio file
+  - delete the later
+  - keep registering other files
+  - relaunching the program, which will ask again for the badly registered file since it was deleted
 
 ## Installation
 Requires Python 3.6+, additionally you will have to install portaudio, pyaduio (it's python bindings) and webrtcvad.  

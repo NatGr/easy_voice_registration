@@ -84,7 +84,7 @@ if __name__ == '__main__':
             sys.stderr.write(f"csv header should be 'file{args.csv_delimiter}sentence', see example.csv\n")
             sys.exit(-1)
 
-        data = [(f"{row[0]}.wav", row[1]) for row in csv_reader]
+        data = [(row[0], row[1]) for row in csv_reader]
 
     if args.random_order:
         shuffle(data)
